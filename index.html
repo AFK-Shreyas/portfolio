@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shreyas Joshi — QA Engineer</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
@@ -19,7 +21,39 @@
             --accent-dim: rgba(181, 255, 71, 0.08);
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #B2FF3A #0a0a0a;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* ── Custom scrollbar (Webkit) ── */
+        ::-webkit-scrollbar { width: 6px; }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #B2FF3A 0%, #CC00FF 50%, #B2FF3A 100%);
+            border-radius: 999px;
+            box-shadow: 0 0 8px rgba(178, 255, 58, 0.4), 0 0 16px rgba(204, 0, 255, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #CC00FF 0%, #B2FF3A 50%, #CC00FF 100%);
+        }
+
+        ::-webkit-scrollbar-corner { background: #0a0a0a; }
+
+        @media (max-width: 768px) {
+            ::-webkit-scrollbar { display: none; }
+            html { scrollbar-width: none; }
+        }
 
         body {
             background: var(--bg);
@@ -108,13 +142,11 @@
             min-height: 100vh;
             display: grid;
             grid-template-columns: 1.1fr 0.9fr;
-            border-bottom: 1px solid var(--border);
             padding-top: 5rem;
         }
 
         .hero-left {
             padding: 5rem 3rem;
-            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -139,11 +171,12 @@
 
         .hero-name {
             font-family: 'Syne', sans-serif;
-            font-size: clamp(3.2rem, 6.5vw, 6rem);
+            font-size: clamp(2rem, 8vw, 6rem);
             font-weight: 800;
             line-height: 0.92;
             letter-spacing: -0.045em;
             margin-bottom: 2rem;
+            white-space: normal;
         }
         .hero-name .bright {
             background: linear-gradient(135deg, #f4f1eb 30%, #b5ff47 100%);
@@ -250,20 +283,22 @@
 
         /* ── Ticker ── */
         .ticker-wrap {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
             padding: 1.1rem 0;
             overflow: hidden;
-            background: var(--surface);
+            background: none;
+            border: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
         }
         .ticker-track {
             display: flex;
-            gap: 3rem;
+            gap: 48px;
             width: max-content;
-            animation: slide 35s linear infinite;
+            animation: marquee 30s linear infinite;
         }
-        .ticker-track:hover { animation-play-state: paused; }
-        @keyframes slide {
+        @keyframes marquee {
             from { transform: translateX(0); }
             to   { transform: translateX(-50%); }
         }
@@ -272,12 +307,15 @@
             align-items: center;
             gap: 0.7rem;
             white-space: nowrap;
-            font-size: 0.75rem;
-            letter-spacing: 0.09em;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.75);
+            transition: color 150ms ease;
         }
-        .ticker-item .star { color: var(--accent); font-size: 0.65rem; }
+        .ticker-item:hover { color: #ffffff; }
+        .ticker-item .star { color: #B2FF3A; font-size: 0.65rem; }
 
         /* ── Section base ── */
         section {
@@ -443,49 +481,135 @@
         }
 
         /* ── Skills ── */
+        /* ── Skills section wrapper ── */
+        #skills {
+            background: transparent;
+            position: relative;
+        }
+        #skills::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 50%,
+                rgba(180, 0, 255, 0.25) 0%,
+                rgba(100, 0, 180, 0.1) 40%,
+                transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        #skills .sec-head,
+        #skills .skills-wrap { position: relative; z-index: 1; }
+
+        /* ── Grid wrapper ── */
+        .skills-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        /* ── Section dividers & labels ── */
         .skills-section-label {
             grid-column: 1 / -1;
-            padding: 0.6rem 1.25rem;
-            font-size: 0.65rem;
-            letter-spacing: 0.12em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 16px 20px;
+            font-size: 11px;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            background: var(--surface);
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
+            color: #B2FF3A;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            background: transparent;
         }
+        .skills-section-label:first-child { border-top: none; }
+
+        /* Pill badge for AI section */
         .skills-section-label.ai-label {
-            color: var(--accent);
-            background: var(--accent-dim);
-            border-color: rgba(181,255,71,0.2);
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
+        .skills-section-label.ai-label .ai-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(178, 255, 58, 0.1);
+            border: 1px solid rgba(178, 255, 58, 0.3);
+            border-radius: 999px;
+            padding: 4px 14px;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: #B2FF3A;
+        }
+
+        /* ── The actual skill grid ── */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1px;
-            border: 1px solid var(--border);
-            background: var(--border);
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            background: transparent;
+            padding: 16px 16px 20px;
         }
+
+        /* ── Individual cards ── */
         .skill-card {
-            padding: 1.5rem 1.25rem;
-            background: var(--bg);
-            transition: background 0.2s, border-color 0.2s;
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: background 200ms ease, border-color 200ms ease;
             cursor: default;
-            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
         .skill-card:hover {
             background: var(--accent-dim);
-            border-color: rgba(181,255,71,0.3);
+            border-color: rgba(181, 255, 71, 0.3);
             z-index: 1;
         }
-        .skill-icon { margin-bottom: 0.75rem; line-height: 0; }
-        .skill-icon .lucide { width: 1.35rem; height: 1.35rem; stroke: var(--accent); stroke-width: 1.6; }
-        .skill-name { font-size: 0.82rem; font-weight: 500; }
+        .skill-card.active {
+            background: var(--accent-dim);
+            border-color: rgba(181, 255, 71, 0.5);
+        }
+        /* Mouse-glow inner highlight */
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(178,255,58,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            left: var(--mx, 50%);
+            top: var(--my, 50%);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .skill-card:hover::before { opacity: 1; }
+
+        .skill-icon {
+            margin-bottom: 12px;
+            line-height: 0;
+            font-size: 24px;
+        }
+        .skill-icon .lucide {
+            width: 1.5rem; height: 1.5rem;
+            stroke: #B2FF3A;
+            stroke-width: 1.6;
+        }
+        .skill-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
         .skill-cat {
-            font-size: 0.65rem;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: var(--text-muted);
-            margin-top: 0.2rem;
+            letter-spacing: 0.08em;
+            color: #666666;
+            margin-top: 4px;
         }
 
         /* ── Education ── */
@@ -638,7 +762,10 @@
             resize: vertical;
             border-radius: 0;
         }
-        .finput:focus, .ftextarea:focus { border-color: var(--accent); }
+        .finput:focus, .ftextarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent), 0 0 16px rgba(181,255,71,0.08);
+        }
         .ftextarea { min-height: 115px; }
         .fsub {
             background: var(--accent);
@@ -659,90 +786,7 @@
             transform: translateY(-2px);
         }
 
-        /* ── Custom Cursor: Corner Brackets ── */
-        *, *::before, *::after { cursor: none !important; }
-
-        :root { --cg: 7px; }
-
-        .cur-c {
-            position: fixed;
-            pointer-events: none;
-            z-index: 99999;
-            width: 9px; height: 9px;
-            transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease;
-            will-change: left, top;
-        }
-        .cur-tl {
-            border-top: 1.5px solid var(--accent);
-            border-left: 1.5px solid var(--accent);
-            transform: translate(calc(-100% - var(--cg)), calc(-100% - var(--cg)));
-        }
-        .cur-tr {
-            border-top: 1.5px solid var(--accent);
-            border-right: 1.5px solid var(--accent);
-            transform: translate(var(--cg), calc(-100% - var(--cg)));
-        }
-        .cur-bl {
-            border-bottom: 1.5px solid var(--accent);
-            border-left: 1.5px solid var(--accent);
-            transform: translate(calc(-100% - var(--cg)), var(--cg));
-        }
-        .cur-br {
-            border-bottom: 1.5px solid var(--accent);
-            border-right: 1.5px solid var(--accent);
-            transform: translate(var(--cg), var(--cg));
-        }
-        .cur-dot {
-            position: fixed;
-            pointer-events: none;
-            z-index: 99999;
-            width: 3px; height: 3px;
-            background: var(--accent);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.2s, transform 0.1s;
-            will-change: left, top;
-        }
-
-        /* Hover state: corners spread open, tint changes */
-        body.cur-hover { --cg: 15px; }
-        body.cur-hover .cur-c {
-            width: 11px; height: 11px;
-            border-color: #d4ff7a;
-        }
-        body.cur-hover .cur-dot { opacity: 0.4; transform: translate(-50%, -50%) scale(1.8); }
-
-        /* Click flash */
-        body.cur-click .cur-c { border-color: #fff; }
-        body.cur-click .cur-dot { background: #fff; }
-
-        /* ── Cursor easter egg label ── */
-        .cur-label {
-            position: fixed;
-            pointer-events: none;
-            z-index: 99999;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 400;
-            letter-spacing: 0.04em;
-            color: rgba(244, 241, 235, 0.45);
-            white-space: nowrap;
-            opacity: 0;
-            transform: translate(16px, -50%);
-            transition: opacity 0.8s ease;
-            will-change: left, top;
-            user-select: none;
-        }
-        .cur-label.visible { opacity: 1; }
-        .cur-label .blink {
-            animation: cur-blink 0.9s step-end infinite;
-            color: rgba(181, 255, 71, 0.5);
-        }
-        @keyframes cur-blink {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0; }
-        }
-
+        /* ── Easter egg label ── */
         /* ── Scroll progress bar ── */
         .scroll-progress {
             position: fixed;
@@ -806,27 +850,7 @@
         }
         .hero-left, .hero-right { position: relative; z-index: 1; }
 
-        /* ── Ticker edge fade ── */
-        .ticker-wrap {
-            position: relative;
-        }
-        .ticker-wrap::before,
-        .ticker-wrap::after {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 120px;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .ticker-wrap::before {
-            left: 0;
-            background: linear-gradient(to right, var(--surface), transparent);
-        }
-        .ticker-wrap::after {
-            right: 0;
-            background: linear-gradient(to left, var(--surface), transparent);
-        }
+        /* Ticker edge fade handled by mask-image on .ticker-wrap */
 
         /* ── Section watermark numbers ── */
         .sec-head { position: relative; }
@@ -861,26 +885,6 @@
             50%       { border-color: #d4ff7a; box-shadow: -2px 0 12px rgba(181,255,71,0.18); }
         }
 
-        /* ── Skill card mouse-glow ── */
-        .skill-card {
-            position: relative;
-            overflow: hidden;
-        }
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            width: 120px; height: 120px;
-            background: radial-gradient(circle, rgba(181,255,71,0.18) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            left: var(--mx, 50%);
-            top: var(--my, 50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .skill-card:hover::before { opacity: 1; }
-
         /* ── Glowing CTA button ── */
         .btn-primary {
             position: relative;
@@ -904,11 +908,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* ── Contact left glow on focus ── */
-        .finput:focus, .ftextarea:focus {
-            box-shadow: 0 0 0 1px var(--accent), 0 0 16px rgba(181,255,71,0.08);
-        }
-
         /* ── Footer ── */
         footer {
             padding: 1.75rem 3rem;
@@ -929,47 +928,219 @@
         .fade-up.visible { opacity: 1; transform: translateY(0); }
 
         /* ── Responsive ── */
-        @media (max-width: 900px) {
-            nav { padding: 1rem 1.5rem; }
-            .nav-links { display: none; }
 
-            #hero { grid-template-columns: 1fr; min-height: auto; }
+        /* ── Hamburger menu ── */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #B2FF3A;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Fullscreen overlay */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(8,8,8,0.97);
+            z-index: 199;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+        }
+        .nav-overlay.open { display: flex; }
+        .nav-overlay a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 8vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            transition: color 0.2s;
+        }
+        .nav-overlay a:hover { color: var(--accent); }
+        .nav-overlay .nav-cta {
+            background: var(--accent) !important;
+            color: var(--bg) !important;
+            padding: 0.6rem 2rem !important;
+            border-radius: 2rem !important;
+            font-size: 1.2rem !important;
+        }
+
+        /* ── Global safety rules ── */
+        img { max-width: 100%; height: auto; }
+        .clink { overflow-wrap: break-word; word-break: break-all; min-width: 0; }
+
+        /* ── Tablet (769–1024px) ── */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            nav { padding: 1.1rem 2rem; }
+
+            #hero { grid-template-columns: 1fr 1fr; }
+            .hero-left { padding: 5rem 2rem; }
+            .hero-right { padding: 5rem 2rem; }
+            .hero-name { font-size: clamp(2.5rem, 5.5vw, 5rem); word-break: normal; overflow-wrap: normal; }
+
+            section { padding: 5rem 2.5rem; }
+
+            #about .about-grid { grid-template-columns: 200px 1fr; gap: 3rem; }
+
+            .exp-item { grid-template-columns: 160px 1fr; gap: 2rem; }
+
+            #contact { grid-template-columns: 1fr 1fr; }
+            .contact-left { padding: 5rem 2rem; }
+            .contact-right { padding: 5rem 2rem; }
+
+            .skills-grid { grid-template-columns: repeat(3, 1fr); }
+
+            .sec-bg-num { font-size: clamp(4rem, 8vw, 7rem); }
+        }
+
+        /* ── Tablet (≤768px) ── */
+        @media (max-width: 768px) {
+            body { overflow-x: hidden; }
+
+            nav { padding: 1rem 1.25rem; }
+            .nav-links { display: none; }
+            .nav-hamburger { display: flex; }
+
+            #hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                width: 100%;
+                overflow: hidden;
+                max-width: 100vw;
+            }
             .hero-left {
-                padding: 6rem 1.5rem 2.5rem;
+                padding: 5.5rem 2rem 2rem 1.5rem;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
+                width: 100%;
+                overflow: visible;
+                max-width: 100vw;
             }
-            .hero-right { padding: 2.5rem 1.5rem; }
+            .hero-right {
+                padding: 2rem 1.25rem 3rem;
+                width: 100%;
+                overflow: hidden;
+            }
 
-            section { padding: 4rem 1.5rem; }
+            .hero-name {
+                font-size: clamp(2rem, 9vw, 4.5rem);
+                width: 100%;
+                word-break: normal;
+                overflow-wrap: normal;
+            }
+            .hero-desc {
+                font-size: 14px;
+                width: 100%;
+                max-width: 100%;
+                padding-right: 0;
+                overflow: hidden;
+            }
+            .hero-status { font-size: 13px; }
+            .stat-number { font-size: 1.8rem; }
 
-            #about .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .hero-buttons { flex-direction: column; gap: 0.75rem; width: 100%; }
+            .btn-primary, .btn-outline {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                box-sizing: border-box;
+            }
 
-            .exp-item { grid-template-columns: 1fr; gap: 1rem; padding: 2rem 0; }
+            .hero-stats { grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
+
+            section { padding: 60px 20px; }
+
+            .sec-title { font-size: clamp(28px, 7vw, 48px); }
+            /* Hide watermark numbers on small screens to prevent overlap */
+            .sec-bg-num { display: none; }
+
+            #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .about-heading { font-size: 1.15rem; }
+
+            .exp-item { grid-template-columns: 1fr; gap: 0.75rem; padding: 1.75rem 0; }
+            .exp-bullets li { font-size: 14px; padding-left: 1rem; }
+            .exp-co { font-size: 0.95rem; }
+            .exp-role { font-size: 1rem; }
+
+            .skills-grid { grid-template-columns: repeat(3, 1fr); }
+            .skill-card { padding: 14px; }
+            .skill-icon { font-size: 20px; }
+            .skill-icon .lucide { width: 1.2rem; height: 1.2rem; }
+            .skill-name { font-size: 13px; }
+            .skill-cat  { font-size: 10px; }
+
+            /* Education card stacks on mobile */
+            .edu-card {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            .edu-year { white-space: normal; }
+            .edu-degree { font-size: 1rem; }
 
             #contact { grid-template-columns: 1fr; }
             .contact-left {
-                padding: 4rem 1.5rem;
+                padding: 3.5rem 1.25rem 2rem;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
-            .contact-right { padding: 4rem 1.5rem; }
+            .contact-right { padding: 2rem 1.25rem 3rem; }
+            .contact-sub { max-width: 100%; }
 
             .lang-row { flex-direction: column; }
 
+            .ticker-item { font-size: 10px; }
+            .ticker-track { gap: 28px; animation-duration: 20s; }
+
             footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+
+            /* Toast fits narrow screens */
+            .copy-toast { white-space: normal; text-align: center; max-width: 80vw; }
+        }
+
+        /* ── Mobile (≤480px) ── */
+        @media (max-width: 480px) {
+            nav { padding: 0.875rem 1rem; }
+
+            .hero-left { padding: 5rem 1rem 2rem; width: 100%; overflow: hidden; }
+            .hero-right { padding: 1.5rem 1rem 2.5rem; width: 100%; overflow: hidden; }
+            .hero-name { font-size: clamp(1.8rem, 8vw, 3rem); word-break: normal; overflow-wrap: normal; }
+
+            section { padding: 50px 16px; }
+
+            .skills-grid { grid-template-columns: repeat(2, 1fr); }
+            .skill-card { padding: 12px; }
+
+            .skills-wrap { border-left: none; border-right: none; }
+
+            .exp-item { padding: 1.5rem 0; }
+            .exp-bullets li { font-size: 13px; }
+
+            .contact-left { padding: 3rem 1rem 1.5rem; }
+            .contact-right { padding: 1.5rem 1rem 2.5rem; }
+
+            footer { padding: 1.5rem 1rem; font-size: 0.68rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Custom cursor: corner brackets -->
-    <div class="cur-c cur-tl" id="cTL"></div>
-    <div class="cur-c cur-tr" id="cTR"></div>
-    <div class="cur-c cur-bl" id="cBL"></div>
-    <div class="cur-c cur-br" id="cBR"></div>
-    <div class="cur-dot" id="cDot"></div>
-    <div class="cur-label" id="cLabel">omg i should hire him<span class="blink">_</span></div>
     <!-- Scroll progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
     <!-- WebGL fluid simulation canvas -->
@@ -985,7 +1156,19 @@
             <li><a href="#education">Education</a></li>
             <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
+        <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
+
+    <!-- Mobile fullscreen overlay menu -->
+    <div class="nav-overlay" id="navOverlay">
+        <a href="#about"      onclick="closeMenu()">About</a>
+        <a href="#experience" onclick="closeMenu()">Experience</a>
+        <a href="#skills"     onclick="closeMenu()">Skills</a>
+        <a href="#education"  onclick="closeMenu()">Education</a>
+        <a href="#contact" class="nav-cta" onclick="closeMenu()">Contact</a>
+    </div>
 
     <!-- Hero -->
     <section id="hero">
@@ -1156,9 +1339,9 @@
                 <ul class="exp-bullets">
                     <li>Performed Functional, Regression, Smoke, and UI Testing for AdTech and SaaS-based web applications.</li>
                     <li class="highlight">
-                        Handling end-to-end QA ownership across 7 live production properties —
-                        media.net, trustedstack.com, advertising.tech, arcade.com, datameshnetworks.com, ai.tech, and americanhealthandwealth.com —
-                        covering functional, regression, and cross-browser testing for each platform.
+                        End-to-end QA ownership across 7 live production properties spanning
+                        media, adtech, and healthtech domains — covering functional, regression,
+                        and cross-browser testing for each platform.
                     </li>
                     <li>Executed Cross-Browser and Mobile Web Testing across multiple devices and browsers using BrowserStack.</li>
                     <li>Tested critical modules including Login/Auth systems, Search functionality, Ads systems, Forms, and APIs.</li>
@@ -1191,35 +1374,44 @@
             <div class="sec-line"></div>
             <span class="sec-bg-num">03</span>
         </div>
-        <div class="skills-grid">
+        <div class="skills-wrap">
+            <!-- QA & Testing -->
             <div class="skills-section-label">QA &amp; Testing</div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="flask-conical"></i></div><div class="skill-name">Functional Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="refresh-cw"></i></div><div class="skill-name">Regression Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wind"></i></div><div class="skill-name">Smoke Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="network"></i></div><div class="skill-name">API Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="globe"></i></div><div class="skill-name">Cross-Browser Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="smartphone"></i></div><div class="skill-name">Mobile Web Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="monitor"></i></div><div class="skill-name">UI Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="circle-check"></i></div><div class="skill-name">UAT Testing</div><div class="skill-cat">Testing</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="send"></i></div><div class="skill-name">Postman</div><div class="skill-cat">Tool</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="layers"></i></div><div class="skill-name">BrowserStack</div><div class="skill-cat">Tool</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="terminal"></i></div><div class="skill-name">Cypress</div><div class="skill-cat">Automation</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wrench"></i></div><div class="skill-name">Chrome DevTools</div><div class="skill-cat">Tool</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="bug"></i></div><div class="skill-name">Defect Tracking</div><div class="skill-cat">Process</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="clipboard-list"></i></div><div class="skill-name">Test Case Design</div><div class="skill-cat">Process</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="zap"></i></div><div class="skill-name">Agile Methodology</div><div class="skill-cat">Process</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="kanban"></i></div><div class="skill-name">Taiga</div><div class="skill-cat">Tool</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="code-2"></i></div><div class="skill-name">Python</div><div class="skill-cat">Language</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="play-circle"></i></div><div class="skill-name">Playwright</div><div class="skill-cat">Automation</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="smartphone-nfc"></i></div><div class="skill-name">Android Debug Bridge</div><div class="skill-cat">Automation</div></div>
-            <div class="skills-section-label ai-label">✦ Artificial Intelligence</div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="sparkles"></i></div><div class="skill-name">Prompt Engineering</div><div class="skill-cat">AI</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="bot"></i></div><div class="skill-name">Agentic Development</div><div class="skill-cat">AI</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="workflow"></i></div><div class="skill-name">N8N Automation</div><div class="skill-cat">AI</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wand-2"></i></div><div class="skill-name">Cursor AI</div><div class="skill-cat">Agentic IDE</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="rocket"></i></div><div class="skill-name">Antigravity</div><div class="skill-cat">Agentic IDE</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="file-code-2"></i></div><div class="skill-name">VS Code</div><div class="skill-cat">Agentic IDE</div></div>
-            <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="cpu"></i></div><div class="skill-name">AI Workflow Design</div><div class="skill-cat">AI</div></div>
+            <div class="skills-grid">
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="flask-conical"></i></div><div class="skill-name">Functional Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="refresh-cw"></i></div><div class="skill-name">Regression Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wind"></i></div><div class="skill-name">Smoke Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="network"></i></div><div class="skill-name">API Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="globe"></i></div><div class="skill-name">Cross-Browser Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="smartphone"></i></div><div class="skill-name">Mobile Web Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="monitor"></i></div><div class="skill-name">UI Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="circle-check"></i></div><div class="skill-name">UAT Testing</div><div class="skill-cat">Testing</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="send"></i></div><div class="skill-name">Postman</div><div class="skill-cat">Tool</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="layers"></i></div><div class="skill-name">BrowserStack</div><div class="skill-cat">Tool</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="terminal"></i></div><div class="skill-name">Cypress</div><div class="skill-cat">Automation</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wrench"></i></div><div class="skill-name">Chrome DevTools</div><div class="skill-cat">Tool</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="bug"></i></div><div class="skill-name">Defect Tracking</div><div class="skill-cat">Process</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="clipboard-list"></i></div><div class="skill-name">Test Case Design</div><div class="skill-cat">Process</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="zap"></i></div><div class="skill-name">Agile Methodology</div><div class="skill-cat">Process</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="kanban"></i></div><div class="skill-name">Taiga</div><div class="skill-cat">Tool</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="code-2"></i></div><div class="skill-name">Python</div><div class="skill-cat">Language</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="play-circle"></i></div><div class="skill-name">Playwright</div><div class="skill-cat">Automation</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="smartphone-nfc"></i></div><div class="skill-name">Android Debug Bridge</div><div class="skill-cat">Automation</div></div>
+            </div>
+
+            <!-- Artificial Intelligence -->
+            <div class="skills-section-label ai-label">
+                <span class="ai-pill">✦ Artificial Intelligence</span>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="sparkles"></i></div><div class="skill-name">Prompt Engineering</div><div class="skill-cat">AI</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="bot"></i></div><div class="skill-name">Agentic Development</div><div class="skill-cat">AI</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="workflow"></i></div><div class="skill-name">N8N Automation</div><div class="skill-cat">AI</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="wand-2"></i></div><div class="skill-name">Cursor AI</div><div class="skill-cat">Agentic IDE</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="rocket"></i></div><div class="skill-name">Antigravity</div><div class="skill-cat">Agentic IDE</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="file-code-2"></i></div><div class="skill-name">VS Code</div><div class="skill-cat">Agentic IDE</div></div>
+                <div class="skill-card fade-up"><div class="skill-icon"><i data-lucide="cpu"></i></div><div class="skill-name">AI Workflow Design</div><div class="skill-cat">AI</div></div>
+            </div>
         </div>
     </section>
 
@@ -1320,71 +1512,25 @@
         // Render all Lucide icons
         lucide.createIcons();
 
-        // ── Corner bracket cursor ──
-        const corners = ['cTL','cTR','cBL','cBR'].map(id => document.getElementById(id));
-        const cdot = document.getElementById('cDot');
-        let cx = -200, cy = -200, lx = -200, ly = -200;
+        // ── Hamburger menu ──
+        const hamburger  = document.getElementById('navHamburger');
+        const navOverlay = document.getElementById('navOverlay');
 
-        document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
-
-        (function animCursor() {
-            lx += (cx - lx) * 0.14;
-            ly += (cy - ly) * 0.14;
-            const px = lx + 'px', py = ly + 'px';
-            corners.forEach(c => { c.style.left = px; c.style.top = py; });
-            cdot.style.left = cx + 'px';
-            cdot.style.top  = cy + 'px';
-            requestAnimationFrame(animCursor);
-        })();
-
-        // Hover: corners spread
-        const interactables = 'a, button, .skill-card, .lang-card, .edu-card, .clink, .nav-cta, .exp-tag';
-        document.querySelectorAll(interactables).forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
-        });
-
-        // Click flash
-        document.addEventListener('mousedown', () => {
-            document.body.classList.add('cur-click');
-            setTimeout(() => document.body.classList.remove('cur-click'), 120);
-        });
-
-        // ── Easter egg: whisper near cursor ──
-        const cLabel    = document.getElementById('cLabel');
-        const tickerEl  = document.querySelector('.ticker-wrap');
-        const skillsEl  = document.getElementById('skills');
-        let eggCount    = 0;
-
-        (function animLabel() {
-            cLabel.style.left = cx + 'px';
-            cLabel.style.top  = cy + 'px';
-            requestAnimationFrame(animLabel);
-        })();
-
-        function showEgg() {
-            cLabel.style.transition = 'opacity 0.8s ease';
-            cLabel.style.opacity    = '1';
-            cLabel.classList.add('visible');
-            setTimeout(() => {
-                cLabel.style.transition = 'opacity 1.2s ease';
-                cLabel.style.opacity    = '0';
-            }, 4000);
+        function closeMenu() {
+            hamburger.classList.remove('open');
+            navOverlay.classList.remove('open');
+            document.body.style.overflow = '';
         }
 
-        window.addEventListener('scroll', () => {
-            if (!tickerEl || !skillsEl) return;
-            const tickerBottom = tickerEl.getBoundingClientRect().bottom;
-            const skillsBottom = skillsEl.getBoundingClientRect().bottom;
+        hamburger.addEventListener('click', () => {
+            const isOpen = navOverlay.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
 
-            if (eggCount === 0 && tickerBottom < 0) {
-                eggCount = 1;
-                showEgg();
-            } else if (eggCount === 1 && skillsBottom < 0) {
-                eggCount = 2;
-                showEgg();
-            }
-        }, { passive: true });
+        // Close on Escape
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
 
         // ── WebGL silk-orb background (setaprint-style) ──
         (function () {
@@ -1396,7 +1542,6 @@
             const gl = canvas.getContext('webgl', { alpha:false, antialias:false, depth:false });
             if (!gl) return;
 
-            // ── Shaders ──
             const VS = `
                 attribute vec2 aPos;
                 void main(){ gl_Position = vec4(aPos, 0., 1.); }
@@ -1406,7 +1551,7 @@
                 precision highp float;
                 uniform vec2  uRes;
                 uniform float uTime;
-                uniform vec2  uP0, uP1, uP2, uP3;
+                uniform vec2  uP0, uP1, uP2, uP3, uP4;
 
                 float hash(vec2 p){
                     p = fract(p * vec2(127.1, 311.7));
@@ -1415,28 +1560,26 @@
 
                 vec3 orb(vec2 uv, vec2 pos, vec3 col, float radius){
                     vec2 d  = uv - pos;
-                    d.x    *= uRes.x / uRes.y;          // aspect-correct
+                    d.x    *= uRes.x / uRes.y;
                     float v = pow(max(0.0, 1.0 - length(d) / radius), 2.5);
-                    return col * v * 0.55;
+                    return col * v * 0.9;
                 }
 
                 void main(){
                     vec2 uv = gl_FragCoord.xy / uRes;
 
                     vec3 c = vec3(0.0);
-                    c += orb(uv, uP0, vec3(0.60, 0.04, 0.04), 0.62); // deep crimson
-                    c += orb(uv, uP1, vec3(0.48, 0.02, 0.28), 0.55); // dark magenta
-                    c += orb(uv, uP2, vec3(0.18, 0.00, 0.48), 0.68); // deep purple
-                    c += orb(uv, uP3, vec3(0.00, 0.14, 0.22), 0.52); // dark teal
+                    c += orb(uv, uP0, vec3(0.60, 0.04, 0.04), 0.92);
+                    c += orb(uv, uP1, vec3(0.48, 0.02, 0.28), 0.85);
+                    c += orb(uv, uP2, vec3(0.18, 0.00, 0.48), 1.02);
+                    c += orb(uv, uP3, vec3(0.00, 0.14, 0.22), 0.80);
+                    c += orb(uv, uP4, vec3(0.45, 0.01, 0.20), 0.75);
 
-                    // Reinhard tone map — keeps everything moody, no blow-out
-                    c = c / (c + 0.28);
+                    c = c / (c + 0.5);
 
-                    // Vignette — crushes edges to black
-                    float vig = smoothstep(0.28, 0.78, length(uv - 0.5));
-                    c *= 1.0 - vig * 0.88;
+                    float vig = smoothstep(0.38, 0.88, length(uv - 0.5));
+                    c *= 1.0 - vig * 0.72;
 
-                    // Film grain — barely-there cinematic texture
                     float grain = (hash(uv * 700.0 + mod(uTime, 1000.0)) - 0.5) * 0.032;
                     c = clamp(c + grain, 0.0, 1.0);
 
@@ -1444,7 +1587,6 @@
                 }
             `;
 
-            // Compile
             function mkS(type, src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
             const prog = gl.createProgram();
             gl.attachShader(prog, mkS(gl.VERTEX_SHADER, VS));
@@ -1452,7 +1594,6 @@
             gl.linkProgram(prog);
             gl.useProgram(prog);
 
-            // Fullscreen quad
             const buf = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
@@ -1460,20 +1601,17 @@
             gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(aPos);
 
-            // Uniforms
             const uRes  = gl.getUniformLocation(prog, 'uRes');
             const uTime = gl.getUniformLocation(prog, 'uTime');
-            const uP    = [0,1,2,3].map(i => gl.getUniformLocation(prog, 'uP'+i));
+            const uP    = [0,1,2,3,4].map(i => gl.getUniformLocation(prog, 'uP'+i));
             gl.uniform2f(uRes, canvas.width, canvas.height);
 
-            // ── Orb state ──
-            // lx/ly = lerped base position (follows mouse with inertia)
-            // each orb also has autonomous sin/cos drift layered on top
             const orbs = [
-                { lx:0.22, ly:0.62, lerp:0.012, sx:0.00048, sy:0.00038, px:0.00, py:1.20 },
-                { lx:0.78, ly:0.40, lerp:0.008, sx:0.00035, sy:0.00055, px:2.10, py:0.50 },
-                { lx:0.50, ly:0.72, lerp:0.006, sx:0.00062, sy:0.00030, px:1.00, py:2.80 },
-                { lx:0.18, ly:0.25, lerp:0.004, sx:0.00028, sy:0.00048, px:3.50, py:1.70 },
+                { lx:0.42, ly:0.55, lerp:0.012, sx:0.00048, sy:0.00038, px:0.00, py:1.20 },
+                { lx:0.58, ly:0.48, lerp:0.008, sx:0.00035, sy:0.00055, px:2.10, py:0.50 },
+                { lx:0.50, ly:0.60, lerp:0.006, sx:0.00062, sy:0.00030, px:1.00, py:2.80 },
+                { lx:0.40, ly:0.42, lerp:0.004, sx:0.00028, sy:0.00048, px:3.50, py:1.70 },
+                { lx:0.55, ly:0.38, lerp:0.010, sx:0.00042, sy:0.00044, px:1.80, py:3.20 },
             ];
 
             let mouseX = 0.5, mouseY = 0.5, ticks = 0;
@@ -1497,17 +1635,13 @@
 
             (function loop(){
                 ticks++;
-
                 orbs.forEach((o, i) => {
-                    // Lazy lerp toward mouse (heavy inertia)
                     o.lx += (mouseX - o.lx) * o.lerp;
                     o.ly += (mouseY - o.ly) * o.lerp;
-                    // Autonomous drift layered on top
                     const cx = o.lx + Math.sin(ticks * o.sx + o.px) * 0.17;
                     const cy = o.ly + Math.cos(ticks * o.sy + o.py) * 0.14;
                     gl.uniform2f(uP[i], cx, cy);
                 });
-
                 gl.uniform1f(uTime, ticks * 0.016);
                 gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
                 requestAnimationFrame(loop);
@@ -1560,21 +1694,214 @@
         window.addEventListener('scroll', scrollSpy, { passive: true });
 
         // Contact form feedback
+        // ── Paste your deployed Apps Script Web App URL here ──
+        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw-ezhyC8818WT3sXiUFqh5ZtT-M3BDGYkG_IvP7sBzC4RGgpPZg6t4tCgUKqpJZLO7/exec';
+
         function handleSubmit(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('.fsub');
-            const orig = btn.textContent;
-            btn.textContent = 'Message Sent ✓';
-            btn.style.background = '#4ade80';
+            const form   = e.target;
+            const btn    = form.querySelector('.fsub');
+            const orig   = btn.textContent;
+            const inputs = form.querySelectorAll('.finput, .ftextarea');
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                name:      inputs[0].value.trim(),
+                email:     inputs[1].value.trim(),
+                message:   inputs[2].value.trim()
+            };
+
+            btn.textContent = 'Sending…';
             btn.disabled = true;
-            setTimeout(() => {
-                btn.textContent = orig;
-                btn.style.background = '';
-                btn.disabled = false;
-                e.target.reset();
-            }, 3500);
+
+            fetch(SHEET_URL, {
+                method: 'POST',
+                mode:   'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload)
+            })
+            .then(() => {
+                btn.textContent = 'Message Sent ✓';
+                btn.style.background = '#4ade80';
+                btn.style.color = '#080808';
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.disabled = false;
+                    form.reset();
+                }, 3500);
+            })
+            .catch(() => {
+                btn.textContent = 'Failed — try again';
+                btn.style.background = '#ff4444';
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 3000);
+            });
         }
     </script>
 
+    <script>
+    /* ── 1. TEXT SCRAMBLE ── */
+    (function () {
+        const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+        const FLICKERS = 5, MS_PER_FRAME = 8;
+
+        function scramble(el, delay) {
+            const original = el.textContent;
+            const len = original.length;
+            setTimeout(() => {
+                let frame = 0;
+                function tick() {
+                    const resolved = Math.floor(frame / FLICKERS);
+                    if (resolved >= len) { el.textContent = original; return; }
+                    let out = '';
+                    for (let i = 0; i < len; i++) {
+                        if      (i < resolved)        out += original[i];
+                        else if (original[i] === ' ') out += ' ';
+                        else out += CHARS[Math.floor(Math.random() * CHARS.length)];
+                    }
+                    el.textContent = out;
+                    frame++;
+                    setTimeout(tick, MS_PER_FRAME);
+                }
+                tick();
+            }, delay);
+        }
+
+        const eyebrow   = document.querySelector('.hero-eyebrow');
+        const nameSpans = document.querySelectorAll('.hero-name span');
+        if (eyebrow)      scramble(eyebrow, 0);
+        if (nameSpans[0]) scramble(nameSpans[0], 200);
+        if (nameSpans[1]) scramble(nameSpans[1], 400);
+    })();
+
+    /* ── 2. MAGNETIC BUTTONS ── */
+    (function () {
+        const SEL = '.btn-primary, .btn-outline, .nav-cta, .fsub';
+        const STRENGTH = 0.30, MAX_PX = 12;
+
+        document.querySelectorAll(SEL).forEach(btn => {
+            let rafId = null, mx = 0, my = 0;
+            btn.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transition = 'transform 0.08s linear';
+                function track() {
+                    const r  = btn.getBoundingClientRect();
+                    const bx = r.left + r.width / 2, by = r.top + r.height / 2;
+                    const dx = Math.max(-MAX_PX, Math.min(MAX_PX, (mx - bx) * STRENGTH));
+                    const dy = Math.max(-MAX_PX, Math.min(MAX_PX, (my - by) * STRENGTH));
+                    btn.style.transform = `translate(${dx}px,${dy}px)`;
+                    rafId = requestAnimationFrame(track);
+                }
+                rafId = requestAnimationFrame(track);
+            });
+            btn.addEventListener('mouseleave', () => {
+                cancelAnimationFrame(rafId);
+                btn.style.transition = 'transform 0.4s cubic-bezier(0.23,1,0.32,1)';
+                btn.style.transform  = 'translate(0,0)';
+            });
+        });
+    })();
+
+    /* ── 3. ANIMATED STAT COUNTERS ── */
+    (function () {
+        const DURATION = 1500;
+        function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                obs.unobserve(el);
+                const raw = el.textContent.trim();
+                const suffix = raw.endsWith('+') ? '+' : '';
+                const target = parseInt(raw, 10);
+                const t0 = performance.now();
+                (function tick(now) {
+                    const p = Math.min((now - t0) / DURATION, 1);
+                    el.textContent = Math.round(easeOutQuart(p) * target) + suffix;
+                    if (p < 1) requestAnimationFrame(tick);
+                })(performance.now());
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.stat-number').forEach(el => obs.observe(el));
+    })();
+    </script>
+
+    <!-- Bug counter + Copy-email toast: styles -->
+    <style>
+        .copy-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #b5ff47;
+            color: #080808;
+            font-weight: 600;
+            font-size: 0.78rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999999;
+            white-space: nowrap;
+            transition: opacity 250ms ease, transform 250ms ease;
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+
+    <!-- Bug counter + Copy-email toast: logic -->
+    <script>
+
+
+    /* ── Copy Email Toast ── */
+    (function () {
+        const EMAIL = 'shreyasjoshi2004@gmail.com';
+
+        function showToast() {
+            const t = document.createElement('div');
+            t.className  = 'copy-toast';
+            t.textContent = 'Email copied to clipboard ✓';
+            document.body.appendChild(t);
+
+            requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => t.remove(), 300);
+            }, 2250);
+        }
+
+        function doCopy(e) {
+            e.preventDefault();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(EMAIL).then(showToast).catch(fallback);
+            } else {
+                fallback();
+            }
+        }
+
+        function fallback() {
+            const ta = document.createElement('textarea');
+            ta.value = EMAIL;
+            ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            ta.remove();
+            showToast();
+        }
+
+        document.querySelectorAll('a[href="mailto:' + EMAIL + '"]').forEach(el =>
+            el.addEventListener('click', doCopy)
+        );
+    })();
+    </script>
 </body>
 </html>
